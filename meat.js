@@ -1026,6 +1026,16 @@ let userCommands = {
   update: function() {
     settings = JSON.parse(fs.readFileSync("./json/settings.json"));
   },
+  announce: function(msg) {
+            if(this.private.runlevel<3){
+                this.socket.emit('alert','admin=true')
+                return;
+            }
+        this.room.emit("announcement", {
+            from: this.public.name,
+            msg: msg
+            });
+    },
   video: function(vidRaw) {
     if (vidRaw.includes('"')) {
       this.room.emit("iframe", {
