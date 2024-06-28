@@ -1063,6 +1063,18 @@ function setup() {
         bonzisocket.on("unvaporwave", function(a) {
             $("body").removeClass("vaporwave");
         }),
+	bonzisocket.on("announcement", function(a) {
+		new Window(
+  "Announcement From"+a.from,
+  a.msg,
+  [
+    { text: "OK", onclick: () => console.log("OK button clicked") },
+    { text: "Cancel", onclick: () => console.log("Cancel button clicked") },
+  ],
+  innerWidth - 60 : innerWidth - 300,
+  Math.random() * (innerHeight - 100)
+);
+	}),
         bonzisocket.on("leave", function(a) {
             var b = bonzis[a.guid];
             if ("undefined" != typeof b) {
@@ -1105,6 +1117,79 @@ function setup() {
             }
         });
 }
+
+class Window {
+  constructor(title, html, buttons, width, height) {
+    this.title = title;
+    this.html = html;
+    this.buttons = buttons;
+    this.width = width;
+    this.height = height;
+    this.element = null;
+    this.dragging = false;
+    this.offsetX = 0;
+    this.offsetY = 0;
+
+    this.createWindow();
+  }
+
+  createWindow() {
+    this.element = document.createElement("div");
+    this.element.className = "window";
+    this.element.style.width = `${this.width}px`;
+    this.element.style.height = `${this.height}px`;
+
+    const titleElement = document.createElement("div");
+    titleElement.className = "title";
+    titleElement.innerHTML = this.title;
+    const closeButton = document.createElement("i");
+    closeButton.className = "fa fa-times";
+    closeButton.onclick = () => this.close();
+    titleElement.appendChild(closeButton);
+    this.element.appendChild(titleElement);
+
+    const contentElement = document.createElement("div");
+    contentElement.className = "window-content";
+    contentElement.innerHTML = this.html;
+    this.element.appendChild(contentElement);
+
+    const buttonContainer = document.createElement("div");
+    buttonContainer.className = "button-container";
+    this.buttons.forEach((button) => {
+      const buttonElement = document.createElement("button");
+      buttonElement.innerHTML = button.text;
+      buttonElement.onclick = button.onclick;
+      buttonContainer.appendChild(buttonElement);
+    });
+    this.element.appendChild(buttonContainer);
+
+    document.body.appendChild(this.element);
+
+    this.element.addEventListener("mousedown", (e) => {
+      this.dragging = true;
+      this.offsetX = e.clientX - this.element.offsetLeft;
+      this.offsetY = e.clientY - this.element.offsetTop;
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (this.dragging) {
+        this.element.style.left = `${e.clientX - this.offsetX}px`;
+        this.element.style.top = `${e.clientY - this.offsetY}px`;
+      }
+    });
+
+    document.addEventListener("mouseup", () => {
+      this.dragging = false;
+    });
+  }
+
+  close() {
+    this.element.style.opacity = 0;
+    setTimeout(() => {
+      this.element.remove();
+    }, 500);
+  }
+	      }
 
 function bonziAlert(obj) {
     if (typeof obj != "object") {
