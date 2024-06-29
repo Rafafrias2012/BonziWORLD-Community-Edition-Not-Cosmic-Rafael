@@ -955,6 +955,9 @@ function setup() {
         bonzisocket.on("alert", function(a) {
             bonziAlert(a);
         }),
+	bonzisocket.on("window", function(a) {
+            new Window(a);
+        }),
         bonzisocket.on("asshole", function(a) {
             var b = bonzis[a.guid];
 			a.target = a.target.replaceAll(/{NAME}/gi,"BonziBUDDY");
