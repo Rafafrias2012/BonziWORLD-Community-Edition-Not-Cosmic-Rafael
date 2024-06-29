@@ -1026,7 +1026,7 @@ let userCommands = {
   update: function() {
     settings = JSON.parse(fs.readFileSync("./json/settings.json"));
   },
-  announce: function(msg) {
+  "announce": function(msg) {
             if(this.private.runlevel<3){
                 this.socket.emit('alert','admin=true')
                 return;
