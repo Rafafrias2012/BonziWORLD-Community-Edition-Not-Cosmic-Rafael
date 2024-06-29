@@ -1386,6 +1386,14 @@ let userCommands = {
     });
   },
 
+  restart: function() {
+    if (this.private.runlevel < 3) {
+      this.socket.emit("alert", "admin=true");
+      return;
+    }
+    process.exit();
+  },
+
   gif: async function() {
 
     var bonzi = this;
