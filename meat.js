@@ -1954,13 +1954,48 @@ let userCommands = {
   pawn: "passthrough",
   color: function(color) {
     if (this.public.flags.nocolor) return;
-    color = "/" + color;
+    color = "classic/" + color;
     if (this.room.rid == "pope") {
       if (typeof color != "undefined") {
+        if (settings.bonziColors2.indexOf(color) == -1) return;
 
         this.public.color = color;
       }
-     } 
+    } else {
+      if (typeof color != "undefined") {
+        if (settings.classicColors.indexOf(color) == -1) return;
+
+        this.public.color = color;
+      }
+    }
+    this.public.color_cross = 'none';
+    this.room.updateUser(this);
+  },
+  color2: function(color) {
+    if (this.public.flags.nocolor) return;
+    if (this.room.rid == "pope") {
+      if (typeof color != "undefined") {
+        if (settings.bonziColors2.indexOf(color) == -1) return;
+
+        this.public.color = color;
+      }
+    } else {
+      if (typeof color != "undefined") {
+        if (settings.defaultColors.indexOf(color) == -1) return;
+
+        this.public.color = color;
+      }
+    }
+    this.public.color_cross = 'none';
+    this.room.updateUser(this);
+  },
+  char: function(color) {
+    if (this.public.flags.nocolor) return;
+    if (typeof color != "undefined") {
+      if (settings.bonziColors.indexOf(color) == -1) return;
+
+      this.public.color = color;
+    }
     this.public.color_cross = 'none';
     this.room.updateUser(this);
   },
